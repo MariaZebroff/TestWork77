@@ -1,23 +1,31 @@
-Custom Post Type "Cities" Implementation
+# Custom Post Type "Cities" Implementation
 
-Overview
+## Overview
 
-This document describes the implementation of a custom post type (CPT) called "Cities" along with a custom taxonomy "Countries" and additional features such as custom fields, a widget displaying city temperature, a searchable table, and a settings page for API key configuration. All modifications are made within a child theme of Storefront and do not rely on plugins.
+This project implements a custom post type (CPT) called **"Cities"**, along with a custom taxonomy **"Countries"** and additional features such as:
 
-Technical Characteristics
+- Custom fields (Latitude & Longitude)
+- A widget displaying city temperature
+- A searchable table
+- A settings page for API key configuration
 
-WordPress Version: 6.5.2
+All modifications are made within a **child theme of Storefront** and do not rely on plugins.
 
-PHP Version: 8.2.0
+## Technical Details
 
-Theme: Storefront (Child Theme)
+- **WordPress Version:** 6.5.2  
+- **PHP Version:** 8.2.0  
+- **Theme:** Storefront (Child Theme)  
 
-1. Custom Post Type "Cities"
+---
 
-A new custom post type "Cities" is created to store city-related information.
+## Features & Implementation
 
-Code Implementation:
+### 1. Custom Post Type "Cities"
+A new custom post type **"Cities"** is created to store city-related information.
 
+#### Code Implementation:
+```php
 function create_cities_cpt() {
     $labels = array(
         'name'               => 'Cities',
@@ -50,17 +58,20 @@ function create_cities_cpt() {
     register_post_type('cities', $args);
 }
 add_action('init', 'create_cities_cpt');
+```
 
-2. Custom Fields: Latitude & Longitude
+---
 
+### 2. Custom Fields: Latitude & Longitude
 Metaboxes are added to the "Cities" post type, allowing users to enter latitude and longitude values.
 
-3. Custom Taxonomy "Countries"
+---
 
-The "Countries" taxonomy is attached to the "Cities" post type, allowing each city to be assigned to a country. Only one country can be assigned to each city.
+### 3. Custom Taxonomy "Countries"
+The **"Countries"** taxonomy is attached to the "Cities" post type, allowing each city to be assigned to a country. Only one country can be assigned per city.
 
-Code Implementation:
-
+#### Code Implementation:
+```php
 function create_cities_taxonomy() {
     $labels = array(
         'name'              => 'Countries',
@@ -88,23 +99,26 @@ function create_cities_taxonomy() {
     register_taxonomy('country', array('cities'), $args);
 }
 add_action('init', 'create_cities_taxonomy');
+```
 
-4. City Temperature Widget
+---
 
+### 4. City Temperature Widget
 A widget is created to display the city name and its current temperature using an external API.
 
-5. Custom Page Template with City Search
+---
 
-A Custom Page Template is created to display a searchable table of cities, countries, and temperatures. The search is implemented using WP Ajax. A REST API custom endpoint was created for data fetch.
+### 5. Custom Page Template with City Search
+A **Custom Page Template** is created to display a **searchable table** of cities, countries, and temperatures. The search is implemented using **WP Ajax** and a custom REST API endpoint for data fetching.
 
-Query with $wpdb:
-
+#### Query with `$wpdb`:
+```php
 $query = $wpdb->prepare("
-    SELECT 
-        p.ID, 
-        p.post_title AS city, 
-        t.name AS country, 
-        pm1.meta_value AS latitude, 
+    SELECT
+        p.ID,
+        p.post_title AS city,
+        t.name AS country,
+        pm1.meta_value AS latitude,
         pm2.meta_value AS longitude
     FROM {$wpdb->posts} p
     LEFT JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
@@ -112,19 +126,21 @@ $query = $wpdb->prepare("
     LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
     LEFT JOIN {$wpdb->postmeta} pm1 ON p.ID = pm1.post_id AND pm1.meta_key = '_city_latitude'
     LEFT JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = '_city_longitude'
-    WHERE p.post_type = 'cities' 
-    AND p.post_status = 'publish' 
-    AND (tt.taxonomy = 'country' OR tt.taxonomy IS NULL) 
+    WHERE p.post_type = 'cities'
+    AND p.post_status = 'publish'
+    AND (tt.taxonomy = 'country' OR tt.taxonomy IS NULL)
     AND p.post_title LIKE %s
     ORDER BY t.name ASC, p.post_title ASC
 ", '%' . $wpdb->esc_like($search_term) . '%');
+```
 
-6. API Key Settings Page
+---
 
-A settings page is created to store and configure the API key used for fetching weather data. This ensures better user convenience to maintain the web app from the WP backend without coding.
+### 6. API Key Settings Page
+A **settings page** is created to store and configure the API key used for fetching weather data. This ensures better user convenience by maintaining the web app from the WP backend without coding.
 
-Code Implementation:
-
+#### Code Implementation:
+```php
 function weather_api_add_admin_menu() {
     add_options_page(
         'Weather API Settings',      
@@ -135,19 +151,25 @@ function weather_api_add_admin_menu() {
     );
 }
 add_action('admin_menu', 'weather_api_add_admin_menu');
+```
 
-Summary
+---
 
-Implemented Custom Post Type "Cities"
+## Summary
+✅ Implemented **Custom Post Type "Cities"**  
+✅ Created **Custom Fields (Latitude & Longitude)**  
+✅ Developed **Custom Taxonomy "Countries"**  
+✅ Built a **City Temperature Widget**  
+✅ Added a **Custom Page Template with WP Ajax Search**  
+✅ Included an **API Key Settings Page for Weather Data**  
 
-Created Custom Fields (Latitude & Longitude)
+This ensures a **complete, efficient, and user-friendly solution** within the **Storefront child theme**, without requiring additional plugins.
 
-Developed Custom Taxonomy "Countries"
+---
 
-Built a City Temperature Widget
+### 📌 Author
+**Maria Leonidovna Zebroff**  
+📍 WordPress Developer | React & TypeScript Enthusiast  
 
-Added a Custom Page Template with WP Ajax search
+🚀 If you find this helpful, give it a ⭐ on GitHub! Happy coding! 🎉
 
-Included an API Key Settings Page for weather data
-
-This ensures a complete, efficient, and user-friendly solution within the Storefront child theme without requiring additional plugins.
