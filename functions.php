@@ -1,10 +1,24 @@
 <?php
 
-require 'inc/cities_cpt.php';
-require 'inc/cities_metabox.php';
-require 'inc/country_tax.php';
-require 'inc/weather_widget.php';
-require 'inc/serach_route.php';
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+
+
+require_once 'inc/cities_cpt.php';
+require_once 'inc/cities_metabox.php';
+require_once 'inc/country_tax.php';
+require_once 'inc/weather_widget.php';
+require_once 'inc/serach_route.php';
+require_once 'inc/admin_page.php';
+
+$api_key = base64_decode(get_option('weather_api_key', ''));
+
+define('OPENWEATHER_API_KEY', $api_key );
+
+
+
 
 function storefront_child_enqueue_scripts() {
     // Enqueue frontend script 
@@ -41,6 +55,16 @@ function action_test_after(){
 }
 add_action('city_action_before_table', 'action_test_before');
 add_action('city_action_after_table', 'action_test_after');
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -59,7 +59,9 @@ class Selected_City_Widget extends WP_Widget {
         }
 
         // Use the API key from config.php
+        // var_dump(OPENWEATHER_API_KEY);
         $api_key = defined('OPENWEATHER_API_KEY') ? OPENWEATHER_API_KEY : '';
+        // var_dump(OPENWEATHER_API_KEY);
         if (empty($api_key)) {
             return false; 
         }
