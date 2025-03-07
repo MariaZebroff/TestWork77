@@ -42,27 +42,6 @@ get_header();
     <?php do_action('city_action_after_table');?>
 </div>
 
-<style>
-    .cities-table-container {
-        max-width: 800px;
-        margin: 20px auto;
-    }
-    .cities-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .cities-table th, .cities-table td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: left;
-    }
-    .cities-table th {
-        background-color: #f4f4f4;
-    }
-    .py-20 {
-        padding: 20px 0;
-    }
-</style>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->

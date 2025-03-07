@@ -29,6 +29,14 @@ function storefront_child_enqueue_scripts() {
         filemtime(get_stylesheet_directory() . '/build/app.js'),
         true
     );
+    wp_enqueue_style(
+        'storefront-child-style', 
+        get_stylesheet_directory_uri() . '/assets/css/style.css', // Path to the CSS file
+        array(), 
+        filemtime(get_stylesheet_directory() . '/assets/css/style.css'), // Cache busting
+        'all' // Media type (all, screen, print)
+    );
+
     wp_localize_script('storefront-child-frontend', 'cityData', array(
         'root_url' =>get_site_url(),
     ));
