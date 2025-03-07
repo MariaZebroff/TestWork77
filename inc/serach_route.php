@@ -69,7 +69,7 @@ function citySearchResults($data){
         
         $response[] = array(
             'city' => esc_html($city->city),
-            'country' => esc_html($city->country),
+            'country' => !empty($city->country) ? esc_html($city->country) : 'Country is not Chosen',
             'temperature' => $temperature,
             'search_term' => $search_term, //For debugging
         );
