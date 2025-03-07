@@ -24,7 +24,7 @@ get_header();
     <h2>List of Cities, Countries, and Weather</h2>
     <!-- Search Input -->
      <div class="py-20">
-         <input type="text" id="city-search" placeholder="Search for a city..." />
+         <input type="text" id="city-search" placeholder="Search for a city..." /> <button id="reset">Clear</button>
      </div>
     <table class="cities-table">
         <thead>
@@ -35,7 +35,7 @@ get_header();
             </tr>
         </thead>
         <tbody id="cities-table-body">
-            
+        
         </tbody>
     </table>
 </div>
