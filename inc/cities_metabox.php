@@ -16,6 +16,7 @@ function cities_location_meta_callback($post) {
     $latitude = get_post_meta($post->ID, '_city_latitude', true);
     $longitude = get_post_meta($post->ID, '_city_longitude', true);
     ?>
+     <div id="city-location-error" style="color: red">Latitude and Longitude are required fields</div>
     <p>
         <label for="city_latitude">Latitude:</label>
         <input type="text" id="city_latitude" name="city_latitude" value="<?php echo esc_attr($latitude); ?>" style="width:100%;">
@@ -37,6 +38,9 @@ function cities_save_meta_fields($post_id) {
     }
 }
 add_action('save_post', 'cities_save_meta_fields');
+
+
+
 
 
 // $latitude = get_post_meta(get_the_ID(), '_city_latitude', true);

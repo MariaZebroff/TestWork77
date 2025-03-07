@@ -1,5 +1,13 @@
 <?php
+
 add_action('rest_api_init', 'citySearch');
+
+
+
+// https://task1:8890/wp-json/cities/v1/search?term=Vernon
+//https://task1:8890/wp-json/cities/v1/search
+
+
 
 function citySearch(){
     register_rest_route('cities/v1', '/search/', array(

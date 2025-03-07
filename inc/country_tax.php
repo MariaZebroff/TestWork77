@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 function create_cities_taxonomy() {
     $labels = array(
         'name'              => 'Countries',

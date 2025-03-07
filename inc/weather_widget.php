@@ -1,4 +1,8 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';
 }
@@ -77,7 +81,7 @@ class Selected_City_Widget extends WP_Widget {
         }
 
         return array(
-            'temp' => $data['main']['temp'],
+            'temp' => round($data['main']['temp']),
             'description' => $data['weather'][0]['description'],
             'icon' => $data['weather'][0]['icon']
         );

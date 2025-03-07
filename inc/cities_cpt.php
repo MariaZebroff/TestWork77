@@ -1,4 +1,9 @@
 <?php
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 function create_cities_cpt() {
     $labels = array(
         'name'               => 'Cities',
