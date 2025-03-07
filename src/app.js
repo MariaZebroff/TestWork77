@@ -1,4 +1,14 @@
 const siteUrl = cityData.root_url;
+let initialDataLoaded = false;
+let debounceTimeout;
+
+
+  const debounce=(func, delay)=> {
+        return function (...args) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
 
 const populateTable = (data) => {
     const tableBody = document.querySelector('#cities-table-body');
@@ -26,28 +36,58 @@ const showLoader = () => {
     tableBody.innerHTML = "<tr id='loader'><td colspan='3'>Data Loading...</td></tr>";
 };
 
+
+
+const fetchInitialCities = async () => {
+    if (initialDataLoaded) return; // Preventing re-fetching initial data
+    showLoader();
+    try {
+        const response = await fetch(`${siteUrl}/wp-json/cities/v1/search`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        populateTable(data);
+        initialDataLoaded = true; // Mark that initial data is loaded
+
+    } catch (error) {
+        console.error("Error fetching city data:", error);
+    }
+}
+
+const fetchCityData = async ()=> {
+    const searchInput = document.getElementById("city-search");
+    const query = searchInput.value.trim();
+    if (!query) return;
+
+    showLoader(); // Show loader before making the request
+
+    try {
+        const response = await fetch(`${siteUrl}/wp-json/cities/v1/search?term=${query}`);
+
+        if (response.status === 404) {
+            populateTable([]); // Show "No cities found" message
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        populateTable(data);
+
+    } catch (error) {
+        console.error("Error fetching city data:", error);
+    }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", async function () {
     const searchInput = document.getElementById("city-search");
     const resetBtn = document.getElementById("reset");
-    let initialDataLoaded = false; // Flaging to ensure initial fetch runs only once
-
-    async function fetchInitialCities() {
-        if (initialDataLoaded) return; // Preventing re-fetching initial data
-        showLoader();
-        try {
-            const response = await fetch(`${siteUrl}/wp-json/cities/v1/search`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            populateTable(data);
-            initialDataLoaded = true; // Mark that initial data is loaded
-
-        } catch (error) {
-            console.error("Error fetching city data:", error);
-        }
-    }
 
     fetchInitialCities(); // Runing once on page load
 
@@ -56,42 +96,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         searchInput.value ='';
         fetchInitialCities();
     });
-
-    let debounceTimeout;
-    function debounce(func, delay) {
-        return function (...args) {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => func.apply(this, args), delay);
-        };
-    }
-
-    async function fetchCityData() {
-        const query = searchInput.value.trim();
-        if (!query) return;
-
-        showLoader();
-    
-        try {
-            const response = await fetch(`${siteUrl}/wp-json/cities/v1/search?term=${query}`);
-    
-       
-            if (response.status === 404) {
-                populateTable([]); // Pass empty array to show "No cities found"
-                return;
-            }
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            console.log("Fetched Data FROM INPUT:", data);
-            populateTable(data);
-    
-        } catch (error) {
-            console.error("Error fetching city data:", error);
-        }
-    }
 
     searchInput.addEventListener("input", debounce(fetchCityData, 300));
 });

@@ -26,6 +26,7 @@ get_header();
      <div class="py-20">
          <input type="text" id="city-search" placeholder="Search for a city..." /> <button id="reset">Clear</button>
      </div>
+     <?php do_action('city_action_before_table');?>
     <table class="cities-table">
         <thead>
             <tr>
@@ -38,6 +39,7 @@ get_header();
         
         </tbody>
     </table>
+    <?php do_action('city_action_after_table');?>
 </div>
 
 <style>
