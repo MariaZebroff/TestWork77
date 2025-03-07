@@ -38,15 +38,23 @@ function citySearchResults($data){
     $search_term = isset($data['term']) ? sanitize_text_field($data['term']) : '';
 
     $query = $wpdb->prepare("
-        SELECT p.ID, p.post_title AS city, t.name AS country, pm1.meta_value AS latitude, pm2.meta_value AS longitude
-        FROM {$wpdb->posts} p
-        LEFT JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
-        LEFT JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-        LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
-        LEFT JOIN {$wpdb->postmeta} pm1 ON p.ID = pm1.post_id AND pm1.meta_key = '_city_latitude'
-        LEFT JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = '_city_longitude'
-        WHERE p.post_type = 'cities' AND p.post_status = 'publish' AND tt.taxonomy = 'country' AND p.post_title LIKE %s
-        ORDER BY t.name ASC, p.post_title ASC
+        SELECT 
+    p.ID, 
+    p.post_title AS city, 
+    t.name AS country, 
+    pm1.meta_value AS latitude, 
+    pm2.meta_value AS longitude
+    FROM {$wpdb->posts} p
+    LEFT JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
+    LEFT JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'country'
+    LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
+    LEFT JOIN {$wpdb->postmeta} pm1 ON p.ID = pm1.post_id AND pm1.meta_key = '_city_latitude'
+    LEFT JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = '_city_longitude'
+    WHERE p.post_type = 'cities' 
+    AND p.post_status = 'publish' 
+    AND (tt.taxonomy = 'country' OR tt.taxonomy IS NULL) 
+    AND p.post_title LIKE %s
+    ORDER BY t.name ASC, p.post_title ASC
     ", '%' . $wpdb->esc_like($search_term) . '%');
 
     $cities = $wpdb->get_results($query);
