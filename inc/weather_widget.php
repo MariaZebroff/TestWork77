@@ -66,7 +66,7 @@ class Selected_City_Widget extends WP_Widget {
             return false; 
         }
 
-        // $api_key = 'f0a470e4f44ebc27e4753628308d22d3';
+   
         $url = "https://api.openweathermap.org/data/2.5/weather?lat={$lat}&lon={$lon}&units=metric&appid={$api_key}";
 
         $response = wp_remote_get($url);
